@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import { Book } from "./models/bookModel.js";
@@ -35,6 +35,20 @@ app.post('/books', async (request, response) => {
 
         return response.status(201).send(book);
 
+    } catch (error) {
+        console.log(error.message);
+        return response.status(500).send({ message: error.message });
+    }
+});
+
+//Route for get all the books from the database
+app.get('/books', async (request, response) => {
+    try {
+        const books = await Book.find({});
+        return response.status(200).json({
+            count: books.length,
+            data:books
+        });
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
