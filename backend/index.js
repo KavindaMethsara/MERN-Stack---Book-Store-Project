@@ -13,7 +13,7 @@ app.get('/', (request, response) => {
     return response.status(234).send('Welcome to MERN Stack');
 });
 
-//Route for same a new book
+//Route for Save a new book
 app.post('/books', async (request, response) => { 
     try {
         if (
@@ -41,7 +41,7 @@ app.post('/books', async (request, response) => {
     }
 });
 
-//Route for get all the books from the database
+//Route for Get all the books from the database
 app.get('/books', async (request, response) => {
     try {
         const books = await Book.find({});
@@ -55,7 +55,7 @@ app.get('/books', async (request, response) => {
     }
 });
 
-//Route for get one book from the database by id
+//Route for Get one book from the database by id
 app.get('/books/:id', async (request, response) => {
     try {
         const { id } = request.params;
@@ -64,6 +64,35 @@ app.get('/books/:id', async (request, response) => {
     } catch (error) {
         console.log(error.message);
         return response.status(500).send({ message: error.message });
+    }
+});
+
+//Route for Update a book
+app.put('/books/:id', async (request, response) => {
+    try {
+        if (
+            !request.body.title ||
+            !request.body.author ||
+            !request.body.publishYear
+        ) {
+            return response.status(400).send({
+                message: 'Send all required fields: title, author, publishYear',
+            });
+        }
+
+        const { id } = request.params;
+
+        const result = await Book.findByIdAndUpdate(id, request.body);
+        
+        if (!result) {
+            return response.status(404).json({ message: 'Book not found' });
+        }
+
+        return response.status(200).send({ message: 'Book successfully updated!' });
+
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
     }
 });
 
