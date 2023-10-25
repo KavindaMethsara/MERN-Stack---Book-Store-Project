@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios, { Axios } from 'axios';
 import BackButton from '../components/BackButton';
 import Spinner from '../components/Spinner';
